@@ -69,20 +69,35 @@ h1{text-align:center}
 @keyframes fall{
   to{top:100vh;opacity:0}
 }
+
+#questionImage{
+  text-align:center;
+  margin-bottom:15px;
+}
+#questionImage img{
+  max-width:300px;
+  width:100%;
+  border-radius:14px;
+  box-shadow:0 4px 15px rgba(0,0,0,0.4);
+}
+
+
 </style>
 </head>
 
 <body>
 <div class="container">
-  <h1>Ujian Matematika Kelas 7 Semester 2 Bersama Fairel</h1>
+  <h1>Ujian Matematika Kelas 7 Semester 2 Bersama Fairel Learning Centre</h1>
 
   <div class="timer" id="timer">⏱ 01:00:00</div>
   <div class="progress"><div class="bar" id="bar"></div></div>
 
-  <div class="question-box">
+  <div id="questionImage"></div>
     <div class="question" id="question"></div>
     <div class="options" id="options"></div>
     <button class="next-btn" onclick="nextQuestion()">Soal Berikutnya</button>
+    <button class="next-btn" onclick="prevQuestion()">⬅ Soal Sebelumnya</button>
+
     <div class="score-box" id="scoreBox"></div>
     <div class="explanation" id="explanation"></div>
   </div>
@@ -108,9 +123,10 @@ const questions = [
 
 // ===== DESCRIPTIVE TEXT =====
 
-{q:"Read the text carefully.\n\nMy School\n\nMy school is a clean and comfortable place. It has many classrooms, a library, a teachers’ room, and a big yard. The classrooms are painted white and each room has large windows, so the air can flow easily.\n\nIn the morning, students come to school wearing neat uniforms. They study various subjects such as English, Mathematics, and Science. During break time, students usually sit in the yard, talk with friends, or buy snacks at the canteen.\n\nMy school is not only a place to study, but also a place to learn discipline and friendship. All teachers are kind and always help the students.\n\nA text that describes people, animals, or places like the text above is called …",options:["Narrative","Procedure","Descriptive","Recount"],correct:2,solution:"The text explains characteristics of a place, so it is a descriptive text."},
+{q:"Read the text carefully.\n\nMy School\n\nMy school is a clean and comfortable place. It has many classrooms, a library, a teachers’ room, and a big yard. The classrooms are painted white and each room has large windows, so the air can flow easily.\n\nIn the morning, students come to school wearing neat uniforms. They study various subjects such as English, Mathematics, and Science. During break time, students usually sit in the yard, talk with friends, or buy snacks at the canteen.\n\nMy school is not only a place to study, but also a place to learn discipline and friendship. All teachers are kind and always help the students.\n\nA text that describes people, animals, or places like the text above is called …",    img:"sekolah.jpg", options:["Narrative","Procedure","Descriptive","Recount"],correct:2,solution:"The text explains characteristics of a place, so it is a descriptive text."},
 
-{q:"Read the text carefully.\n\nMy Pet Cat\n\nI have a cat named Milo. Milo has soft white fur and blue eyes. He has a small body but he is very active and playful. Every morning, he follows me around the house.\n\nMilo likes to play with a ball of yarn and sleep on the sofa. When he is hungry, he makes a soft sound to get my attention. He is very friendly and never bites anyone.\n\nI really love my cat because he always makes me happy at home.\n\nThe text above mainly describes …",options:["Place","Animal","Activity","Time"],correct:1,solution:"The text explains the characteristics of a cat, so it describes an animal."},
+{q:"Read the text carefully.\n\nMy Pet Cat\n\nI have a cat named Milo. Milo has soft white fur and blue eyes. He has a small body but he is very active and playful. Every morning, he follows me around the house.\n\nMilo likes to play with a ball of yarn and sleep on the sofa. When he is hungry, he makes a soft sound to get my attention. He is very friendly and never bites anyone.\n\nI really love my cat because he always makes me happy at home.\n\nThe text above mainly describes …",
+  img:"cat.png", options:["Place","Animal","Activity","Time"],correct:1,solution:"The text explains the characteristics of a cat, so it describes an animal."},
 
 {q:"Read the text carefully.\n\nOur Classroom\n\nOur classroom is large and bright. It has thirty desks and chairs arranged neatly. There is a whiteboard in front of the class and a clock on the wall.\n\nThe walls are decorated with students’ drawings and motivational posters. There are also windows on both sides of the room that make the classroom bright during the day.\n\nBecause the classroom is clean and comfortable, students can study well and enjoy the lesson.\n\nWhich sentence best describes a classroom?",options:["I go to school every day","The classroom is clean and large","Open your book now","I am studying English"],correct:1,solution:"The correct sentence describes the condition of a classroom."},
 
@@ -167,7 +183,15 @@ function loadQuestion(){
   document.getElementById("explanation").style.display="none";
   document.getElementById("scoreBox").innerText="Skor: "+score.toFixed(1);
   const q=questions[index];
-  document.getElementById("question").innerText=(index+1)+". "+q.q;
+  const imgBox = document.getElementById("questionImage");
+imgBox.innerHTML = "";
+
+if(q.img){
+  imgBox.innerHTML = `<img src="${q.img}" alt="gambar soal">`;
+}
+
+document.getElementById("question").innerText = (index+1)+". "+q.q;
+
   const opt=document.getElementById("options");
   opt.innerHTML="";
   q.options.forEach((o,i)=>{
@@ -210,11 +234,15 @@ function nextQuestion(){
 
 function finish(){
   clearInterval(timerInt);
-  document.getElementById("question").innerText="Ujian Selesai";
+  document.getElementById("question").innerText="Ujian Selesai 🎉";
   document.getElementById("options").innerHTML="";
   document.getElementById("explanation").style.display="none";
-  document.getElementById("scoreBox").innerText="SKOR AKHIR: "+score.toFixed(1);
+
+  document.getElementById("scoreBox").innerHTML =
+    "SKOR AKHIR: " + score.toFixed(1) +
+    "<br><br><button class='next-btn' onclick='restartExam()'>🔁 Mulai Ulang</button>";
 }
+
 
 function dropCoin(){
   for(let i=0;i<5;i++){
@@ -241,6 +269,23 @@ function updateTimer(){
 const timerInt=setInterval(updateTimer,1000);
 
 loadQuestion();
+
+
+function prevQuestion(){
+  if(index > 0){
+    index--;
+    loadQuestion();
+  }
+}
+function restartExam(){
+  index = 0;
+  score = 0;
+  totalTime = 3600;
+  loadQuestion();
+  timerInt = setInterval(updateTimer,1000);
+}
+
+
 </script>
 </body>
 </html>
