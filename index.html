@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ujian Matematika Kelas 7 Semester 2</title>
+
+<style>
+body{
+  margin:0;
+  font-family:Segoe UI,Arial;
+  background:linear-gradient(135deg,#5b1d6b,#2c0f3a);
+  color:#fff;
+}
+.container{max-width:1100px;margin:auto;padding:20px}
+h1{text-align:center}
+.question-box{
+  background:#3a1452;
+  padding:25px;
+  border-radius:16px;
+}
+.question{font-size:24px;margin-bottom:20px}
+.options{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:15px;
+}
+.option{
+  padding:18px;
+  font-size:20px;
+  border-radius:14px;
+  cursor:pointer;
+  text-align:center;
+  font-weight:bold;
+}
+.a{background:#1e88e5}
+.b{background:#43a047}
+.c{background:#f9a825;color:#000}
+.d{background:#e53935}
+.option.correct{background:#00c853!important}
+.option.wrong{background:#d50000!important}
+.next-btn{
+  margin-top:20px;
+  padding:15px 30px;
+  font-size:20px;
+  border:none;
+  border-radius:12px;
+  background:#00acc1;
+  color:#fff;
+  cursor:pointer;
+}
+.score-box{font-size:22px;margin-top:10px}
+.explanation{
+  display:none;
+  background:#2a0d3b;
+  padding:15px;
+  border-radius:12px;
+  margin-top:15px;
+}
+.timer{text-align:center;font-size:22px;margin-bottom:10px}
+.progress{height:8px;background:#222;border-radius:5px;overflow:hidden}
+.bar{height:100%;background:#00e5ff;width:100%}
+.coin{
+  position:fixed;
+  top:-40px;
+  font-size:32px;
+  animation:fall 1s linear forwards;
+}
+@keyframes fall{
+  to{top:100vh;opacity:0}
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+  <h1>Ujian Matematika Kelas 7 Semester 2 Bersama Fairel</h1>
+
+  <div class="timer" id="timer">⏱ 01:00:00</div>
+  <div class="progress"><div class="bar" id="bar"></div></div>
+
+  <div class="question-box">
+    <div class="question" id="question"></div>
+    <div class="options" id="options"></div>
+    <button class="next-btn" onclick="nextQuestion()">Soal Berikutnya</button>
+    <div class="score-box" id="scoreBox"></div>
+    <div class="explanation" id="explanation"></div>
+  </div>
+</div>
+
+<audio id="soundTrue" src="correct.mp3"></audio>
+<audio id="soundFalse" src="incorrect.mp3"></audio>
+
+<script>
+// ================= SOAL 40 =================
+const questions = [
+// ===== GREETING & INTRODUCTION =====
+{q:"Siti says, 'Good morning, Rani.' The correct response is …",options:["Good night","Good morning","See you","Thank you"],correct:1,solution:"Greeting 'Good morning' should be replied with 'Good morning'."},
+{q:"Which expression is used to introduce yourself?",options:["How are you?","Nice to meet you","Let me introduce myself","See you later"],correct:2,solution:"Introducing oneself uses 'Let me introduce myself'."},
+{q:"Andi meets his teacher at school. He should say …",options:["What's up?","Good evening","Good morning, Sir","Bye-bye"],correct:2,solution:"Polite greeting is required when talking to a teacher."},
+{q:"The best response to 'How are you?' is …",options:["I'm fine, thank you","Goodbye","See you","Yes, I am"],correct:0,solution:"The correct response shows condition politely."},
+
+// ===== COMMAND & INSTRUCTION =====
+{q:"The teacher says, 'Open your book.' This sentence is a …",options:["Greeting","Command","Question","Invitation"],correct:1,solution:"Imperative sentences are used to give commands."},
+{q:"Which sentence is an instruction?",options:["Do you like English?","Please close the door","I am a student","It is a book"],correct:1,solution:"Instruction tells someone to do something."},
+{q:"To ask someone not to do something, we say …",options:["Please do it","Don't do it","You must do it","Can you do it?"],correct:1,solution:"Negative command uses 'Don't'."},
+{q:"Teacher: 'Don't be noisy!' The meaning is …",options:["Be louder","Be quiet","Go outside","Speak clearly"],correct:1,solution:"'Don't be noisy' means 'Be quiet'."},
+
+// ===== DESCRIPTIVE TEXT =====
+{q:"A text that describes people, animals, or places is called …",options:["Narrative","Procedure","Descriptive","Recount"],correct:2,solution:"Descriptive text explains characteristics."},
+{q:"My cat is cute and playful. The sentence describes …",options:["Place","Animal","Activity","Time"],correct:1,solution:"The object described is an animal."},
+{q:"Which sentence describes a classroom?",options:["I go to school","The classroom is clean and large","Open your book","I am studying"],correct:1,solution:"Description shows characteristics."},
+{q:"The main purpose of descriptive text is to …",options:["Entertain","Give instruction","Describe something","Tell past events"],correct:2,solution:"Descriptive text explains details of something."},
+
+// ===== PRONOUN & NOUN =====
+{q:"Ani has a cat. ___ is very cute.",options:["He","She","It","They"],correct:2,solution:"Animals use pronoun 'it'."},
+{q:"My friends are kind. ___ always help me.",options:["He","She","It","They"],correct:3,solution:"Plural noun uses 'they'."},
+{q:"This is my book. ___ is new.",options:["They","It","He","She"],correct:1,solution:"Singular object uses 'it'."},
+{q:"Mr. Budi is a teacher. ___ teaches English.",options:["She","They","It","He"],correct:3,solution:"Male person uses 'he'."},
+
+// ===== SIMPLE PRESENT TENSE =====
+{q:"She ___ to school every day.",options:["go","goes","went","going"],correct:1,solution:"Third person singular uses verb + s."},
+{q:"They ___ football on Sunday.",options:["plays","playing","play","played"],correct:2,solution:"Plural subject uses base verb."},
+{q:"He ___ not like milk.",options:["do","does","did","doing"],correct:1,solution:"Negative sentence uses 'does not'."},
+{q:"Which sentence is correct?",options:["She go to school","She goes to school","She going to school","She gone to school"],correct:1,solution:"Correct verb form for she is 'goes'."},
+
+// ===== TIME & DAILY ACTIVITY =====
+{q:"I wake up ___ 5 a.m.",options:["in","on","at","to"],correct:2,solution:"Specific time uses 'at'."},
+{q:"We study English ___ Monday.",options:["in","on","at","to"],correct:1,solution:"Days use preposition 'on'."},
+{q:"My father works ___ the morning.",options:["on","at","in","to"],correct:2,solution:"Parts of the day use 'in'."},
+{q:"Which activity is usually done in the evening?",options:["Having breakfast","Going to school","Sleeping","Watching TV"],correct:3,solution:"Watching TV is commonly done in the evening."},
+
+// ===== ADJECTIVE & COMPARISON =====
+{q:"My house is ___ than yours.",options:["big","bigger","biggest","very big"],correct:1,solution:"Comparative adjective uses -er."},
+{q:"This book is the ___ in the class.",options:["thick","thicker","thickest","very thick"],correct:2,solution:"Superlative uses -est."},
+{q:"An elephant is ___ than a cat.",options:["small","smaller","big","bigger"],correct:3,solution:"Elephant is larger than a cat."},
+{q:"Which is an adjective?",options:["Run","Beautiful","Quickly","Eat"],correct:1,solution:"Adjective describes noun."},
+
+// ===== PROCEDURE TEXT =====
+{q:"Procedure text tells us how to …",options:["Describe","Entertain","Do something","Tell story"],correct:2,solution:"Procedure explains steps."},
+{q:"First, ___ the ingredients.",options:["mix","mixed","mixing","mixes"],correct:0,solution:"Imperative uses base verb."},
+{q:"The word 'finally' shows …",options:["Title","Material","Step order","Opinion"],correct:2,solution:"It shows sequence."},
+{q:"Which text is a procedure text?",options:["How to make tea","My holiday","My cat","The legend"],correct:0,solution:"Procedure text gives steps."},
+
+// ===== HOTS (ANALYSIS & CONTEXT) =====
+{q:"Rina says: 'I am very hungry.' What should you say?",options:["I am hungry too","Let's eat something","Good bye","I don't know"],correct:1,solution:"Appropriate response gives solution."},
+{q:"Your friend looks sad. The best expression is …",options:["Be quiet","What's wrong with you?","Are you okay?","Go away"],correct:2,solution:"Shows empathy."},
+{q:"Teacher: 'Can you clean the board?' The polite answer is …",options:["No","I can't","Yes, Sir","Clean the board"],correct:2,solution:"Polite response uses 'Yes, Sir'."},
+{q:"Which sentence shows obligation?",options:["I may go","I can swim","I must do my homework","I like reading"],correct:2,solution:"'Must' shows obligation."}
+];
+
+// ============ LOGIC ============
+let index=0,score=0,locked=false;
+let totalTime=3600;
+const nilaiPerSoal=100/questions.length;
+
+const benar=document.getElementById("soundTrue");
+const salah=document.getElementById("soundFalse");
+
+function loadQuestion(){
+  locked=false;
+  document.getElementById("explanation").style.display="none";
+  document.getElementById("scoreBox").innerText="Skor: "+score.toFixed(1);
+  const q=questions[index];
+  document.getElementById("question").innerText=(index+1)+". "+q.q;
+  const opt=document.getElementById("options");
+  opt.innerHTML="";
+  q.options.forEach((o,i)=>{
+    const d=document.createElement("div");
+    d.className="option "+["a","b","c","d"][i];
+    d.innerText=o;
+    d.onclick=()=>selectAnswer(d,i);
+    opt.appendChild(d);
+  });
+}
+
+function selectAnswer(el,i){
+  if(locked) return;
+  locked=true;
+  const q=questions[index];
+  document.querySelectorAll(".option")[q.correct].classList.add("correct");
+
+  if(i===q.correct){
+    score+=nilaiPerSoal;
+    benar.play();
+    dropCoin();
+  }else{
+    el.classList.add("wrong");
+    salah.play();
+  }
+
+  const exp=document.getElementById("explanation");
+  exp.style.display="block";
+  exp.innerHTML="<b>Kunci Jawaban:</b> "+q.options[q.correct]+"<br><b>Pembahasan:</b> "+q.solution;
+}
+
+function nextQuestion(){
+  if(index<questions.length-1){
+    index++;
+    loadQuestion();
+  }else{
+    finish();
+  }
+}
+
+function finish(){
+  clearInterval(timerInt);
+  document.getElementById("question").innerText="Ujian Selesai";
+  document.getElementById("options").innerHTML="";
+  document.getElementById("explanation").style.display="none";
+  document.getElementById("scoreBox").innerText="SKOR AKHIR: "+score.toFixed(1);
+}
+
+function dropCoin(){
+  for(let i=0;i<5;i++){
+    const c=document.createElement("div");
+    c.className="coin";
+    c.style.left=Math.random()*100+"%";
+    c.innerText="🪙";
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(),1000);
+  }
+}
+
+// TIMER 1 JAM
+function updateTimer(){
+  let h=Math.floor(totalTime/3600);
+  let m=Math.floor((totalTime%3600)/60);
+  let s=totalTime%60;
+  document.getElementById("timer").innerText=
+  `⏱ ${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;
+  document.getElementById("bar").style.width=(totalTime/3600*100)+"%";
+  if(totalTime<=0) finish();
+  totalTime--;
+}
+const timerInt=setInterval(updateTimer,1000);
+
+loadQuestion();
+</script>
+</body>
+</html>
